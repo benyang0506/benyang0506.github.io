@@ -1,0 +1,1046 @@
+<h2 id="一、采集数据"><a href="#一、采集数据" class="headerlink" title="一、采集数据"></a>一、采集数据</h2><h3 id="1、导入数据分析数据格式"><a href="#1、导入数据分析数据格式" class="headerlink" title="1、导入数据分析数据格式"></a>1、导入数据分析数据格式</h3><pre><code class="lang-python">import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import warnings
+from sklearn.preprocessing import StandardScaler
+</code></pre>
+<pre><code class="lang-python">train_path = &#39;train.csv&#39;
+train_data = pd.read_csv(train_path)
+train_data = train_data.drop(&#39;Id&#39;, axis=1)
+test_path = &#39;test.csv&#39;
+test_data = pd.read_csv(test_path)
+test_data = test_data.drop(&#39;Id&#39;, axis=1)
+test_data
+</code></pre>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MSSubClass</th>
+      <th>MSZoning</th>
+      <th>LotFrontage</th>
+      <th>LotArea</th>
+      <th>Street</th>
+      <th>Alley</th>
+      <th>LotShape</th>
+      <th>LandContour</th>
+      <th>Utilities</th>
+      <th>LotConfig</th>
+      <th>...</th>
+      <th>ScreenPorch</th>
+      <th>PoolArea</th>
+      <th>PoolQC</th>
+      <th>Fence</th>
+      <th>MiscFeature</th>
+      <th>MiscVal</th>
+      <th>MoSold</th>
+      <th>YrSold</th>
+      <th>SaleType</th>
+      <th>SaleCondition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>20</td>
+      <td>RH</td>
+      <td>80.0</td>
+      <td>11622</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>120</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>20</td>
+      <td>RL</td>
+      <td>81.0</td>
+      <td>14267</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Corner</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Gar2</td>
+      <td>12500</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>60</td>
+      <td>RL</td>
+      <td>74.0</td>
+      <td>13830</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>60</td>
+      <td>RL</td>
+      <td>78.0</td>
+      <td>9978</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>120</td>
+      <td>RL</td>
+      <td>43.0</td>
+      <td>5005</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>HLS</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>144</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1454</th>
+      <td>160</td>
+      <td>RM</td>
+      <td>21.0</td>
+      <td>1936</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>1455</th>
+      <td>160</td>
+      <td>RM</td>
+      <td>21.0</td>
+      <td>1894</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Abnorml</td>
+    </tr>
+    <tr>
+      <th>1456</th>
+      <td>20</td>
+      <td>RL</td>
+      <td>160.0</td>
+      <td>20000</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>9</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Abnorml</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>85</td>
+      <td>RL</td>
+      <td>62.0</td>
+      <td>10441</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>700</td>
+      <td>7</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>1458</th>
+      <td>60</td>
+      <td>RL</td>
+      <td>74.0</td>
+      <td>9627</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>11</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+  </tbody>
+</table>
+<p>1459 rows × 79 columns</p>
+</div>
+
+
+
+
+<pre><code class="lang-python">tmp3 =train_data.isnull().sum()
+# tmp3
+tmp3[tmp3&gt;0].sort_values(ascending=False)
+</code></pre>
+<pre><code>PoolQC          1453
+MiscFeature     1406
+Alley           1369
+Fence           1179
+FireplaceQu      690
+LotFrontage      259
+GarageYrBlt       81
+GarageType        81
+GarageFinish      81
+GarageQual        81
+GarageCond        81
+BsmtFinType2      38
+BsmtExposure      38
+BsmtFinType1      37
+BsmtCond          37
+BsmtQual          37
+MasVnrArea         8
+MasVnrType         8
+Electrical         1
+dtype: int64
+</code></pre><h3 id="2、理解数据"><a href="#2、理解数据" class="headerlink" title="2、理解数据"></a>2、理解数据</h3><hr>
+<p><img src="attachment:image-3.png" alt="image-3.png"></p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="attachment:image-4.png" alt="image-4.png"></h2><h2 id="二、探索性可视化"><a href="#二、探索性可视化" class="headerlink" title="二、探索性可视化"></a>二、探索性可视化</h2><h3 id="2-1-售价"><a href="#2-1-售价" class="headerlink" title="2.1 售价"></a>2.1 售价</h3><pre><code class="lang-python">train_data[&#39;SalePrice&#39;].describe()
+</code></pre>
+<pre><code>count      1460.000000
+mean     180921.195890
+std       79442.502883
+min       34900.000000
+25%      129975.000000
+50%      163000.000000
+75%      214000.000000
+max      755000.000000
+Name: SalePrice, dtype: float64
+</code></pre><p>通过观察，SalePrice没有无效或者非数值数据</p>
+<pre><code class="lang-python">plt.figure(figsize = (12, 8))
+# sns.set()
+sns.displot(train_data[&#39;SalePrice&#39;])
+</code></pre>
+<pre><code>&lt;seaborn.axisgrid.FacetGrid at 0x1ece6c52e50&gt;
+
+
+
+
+&lt;Figure size 864x576 with 0 Axes&gt;
+</code></pre><p><img src="output_9_2.png" alt="png"></p>
+<h3 id="2-2-售价与房屋面积"><a href="#2-2-售价与房屋面积" class="headerlink" title="2.2 售价与房屋面积"></a>2.2 售价与房屋面积</h3><pre><code class="lang-python"># warnings.filterwarnings(&#39;ignore&#39;)
+# plt.figure(figsize=(12, 8))
+# plt.scatter(train_data[&#39;LotArea&#39;], train_data[&#39;SalePrice&#39;])
+# plt.xlabel(&#39;LotArea&#39;)
+# plt.ylabel(&#39;SalePrice&#39;)
+# plt.show()
+sns.relplot(&#39;LotArea&#39;, &#39;SalePrice&#39;, data=train_data, kind=&#39;scatter&#39;)
+</code></pre>
+<pre><code>&lt;seaborn.axisgrid.FacetGrid at 0x1ece819e7c0&gt;
+</code></pre><p><img src="output_11_1.png" alt="png"></p>
+<h3 id="2-3-售价与建造时间"><a href="#2-3-售价与建造时间" class="headerlink" title="2.3 售价与建造时间"></a>2.3 售价与建造时间</h3><pre><code class="lang-python">plt.figure(figsize=(12, 8))
+sns.boxplot(train_data[&#39;YearBuilt&#39;], train_data[&#39;SalePrice&#39;])
+plt.show()
+</code></pre>
+<p><img src="output_13_0.png" alt="png"></p>
+<h3 id="2-4-售价与地理位置"><a href="#2-4-售价与地理位置" class="headerlink" title="2.4 售价与地理位置"></a>2.4 售价与地理位置</h3><pre><code class="lang-python"># plt.figure(figsize=(12, 8))
+# sns.boxplot(train_data[&#39;Neighborhood&#39;], train_data[&#39;SalePrice&#39;])
+g = sns.catplot(&#39;Neighborhood&#39;, &#39;SalePrice&#39;, data=train_data, kind=&#39;strip&#39;)
+g.fig.set_size_inches(12, 8)
+plt.show()
+</code></pre>
+<p><img src="output_15_0.png" alt="png"></p>
+<pre><code class="lang-python">g = sns.catplot(&#39;Neighborhood&#39;, &#39;SalePrice&#39;, data=train_data, kind=&#39;point&#39;)
+g.fig.set_size_inches(12, 8)
+plt.show()
+</code></pre>
+<p><img src="output_16_0.png" alt="png"></p>
+<pre><code class="lang-python">g = sns.catplot(&#39;Neighborhood&#39;, &#39;SalePrice&#39;, data=train_data, kind=&#39;bar&#39;)
+g.fig.set_size_inches(12, 8)
+plt.show()
+</code></pre>
+<p><img src="output_17_0.png" alt="png"></p>
+<pre><code class="lang-python">g = sns.catplot(&#39;Neighborhood&#39;, &#39;SalePrice&#39;, data=train_data, kind=&#39;box&#39;)
+g.fig.set_size_inches(12, 8)
+plt.show()
+</code></pre>
+<p><img src="output_18_0.png" alt="png"></p>
+<pre><code class="lang-python"># g = sns.catplot(&#39;Neighborhood&#39;, &#39;SalePrice&#39;, data=train_data, kind=&#39;violin&#39;)
+# g.fig.set_size_inches(12, 8)
+# plt.show()
+</code></pre>
+<h3 id="2-5-售价与装修评级"><a href="#2-5-售价与装修评级" class="headerlink" title="2.5 售价与装修评级"></a>2.5 售价与装修评级</h3><pre><code class="lang-python">g = sns.catplot(&#39;OverallQual&#39;, &#39;SalePrice&#39;, data=train_data, kind=&#39;box&#39;)
+g.fig.set_size_inches(12, 8)
+plt.show()
+</code></pre>
+<p><img src="output_21_0.png" alt="png"></p>
+<h2 id="三、特征提取"><a href="#三、特征提取" class="headerlink" title="三、特征提取"></a>三、特征提取</h2><pre><code class="lang-python">plt.figure(figsize=(12, 8))
+corrmat = train_data.corr()
+sns.heatmap(corrmat, annot=False, vmax=1, vmin=-1)
+plt.show()
+corrmat[&#39;SalePrice&#39;].sort_values(ascending=False)
+</code></pre>
+<p><img src="output_23_0.png" alt="png"></p>
+<pre><code>SalePrice        1.000000
+OverallQual      0.790982
+GrLivArea        0.708624
+GarageCars       0.640409
+GarageArea       0.623431
+TotalBsmtSF      0.613581
+1stFlrSF         0.605852
+FullBath         0.560664
+TotRmsAbvGrd     0.533723
+YearBuilt        0.522897
+YearRemodAdd     0.507101
+GarageYrBlt      0.486362
+MasVnrArea       0.477493
+Fireplaces       0.466929
+BsmtFinSF1       0.386420
+LotFrontage      0.351799
+WoodDeckSF       0.324413
+2ndFlrSF         0.319334
+OpenPorchSF      0.315856
+HalfBath         0.284108
+LotArea          0.263843
+BsmtFullBath     0.227122
+BsmtUnfSF        0.214479
+BedroomAbvGr     0.168213
+ScreenPorch      0.111447
+PoolArea         0.092404
+MoSold           0.046432
+3SsnPorch        0.044584
+BsmtFinSF2      -0.011378
+BsmtHalfBath    -0.016844
+MiscVal         -0.021190
+LowQualFinSF    -0.025606
+YrSold          -0.028923
+OverallCond     -0.077856
+MSSubClass      -0.084284
+EnclosedPorch   -0.128578
+KitchenAbvGr    -0.135907
+Name: SalePrice, dtype: float64
+</code></pre><pre><code class="lang-python">plt.figure(figsize=(12, 8))
+SPcorrmat = train_data.corr()[u&#39;SalePrice&#39;]
+SPcorrmat = SPcorrmat.sort_values(key=abs, ascending=False)
+# 和上面取出的结果一样
+plt.plot(SPcorrmat.head(10))
+</code></pre>
+<pre><code>[&lt;matplotlib.lines.Line2D at 0x1ecf2abffa0&gt;]
+</code></pre><p><img src="output_24_1.png" alt="png"></p>
+<p>取与SalePrice相关性较大的几个特征，暂时先取6个。<br><br/><br>OverallQual<br>GrLivArea<br>GarageCars<br>GarageArea<br>TotalBsmtSF<br>1stFlrSF</p>
+<h3 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h3><pre><code class="lang-python">path = &#39;extracted_data.csv&#39;
+data = pd.read_csv(path)
+data
+</code></pre>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OverallQual</th>
+      <th>GrLivArea</th>
+      <th>GarageCars</th>
+      <th>GarageArea</th>
+      <th>TotalBsmtSF</th>
+      <th>1stFlrSF</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7</td>
+      <td>1710</td>
+      <td>2</td>
+      <td>548</td>
+      <td>856</td>
+      <td>856</td>
+      <td>208500</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>6</td>
+      <td>1262</td>
+      <td>2</td>
+      <td>460</td>
+      <td>1262</td>
+      <td>1262</td>
+      <td>181500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>7</td>
+      <td>1786</td>
+      <td>2</td>
+      <td>608</td>
+      <td>920</td>
+      <td>920</td>
+      <td>223500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>7</td>
+      <td>1717</td>
+      <td>3</td>
+      <td>642</td>
+      <td>756</td>
+      <td>961</td>
+      <td>140000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>8</td>
+      <td>2198</td>
+      <td>3</td>
+      <td>836</td>
+      <td>1145</td>
+      <td>1145</td>
+      <td>250000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1455</th>
+      <td>6</td>
+      <td>1647</td>
+      <td>2</td>
+      <td>460</td>
+      <td>953</td>
+      <td>953</td>
+      <td>175000</td>
+    </tr>
+    <tr>
+      <th>1456</th>
+      <td>6</td>
+      <td>2073</td>
+      <td>2</td>
+      <td>500</td>
+      <td>1542</td>
+      <td>2073</td>
+      <td>210000</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>7</td>
+      <td>2340</td>
+      <td>1</td>
+      <td>252</td>
+      <td>1152</td>
+      <td>1188</td>
+      <td>266500</td>
+    </tr>
+    <tr>
+      <th>1458</th>
+      <td>5</td>
+      <td>1078</td>
+      <td>1</td>
+      <td>240</td>
+      <td>1078</td>
+      <td>1078</td>
+      <td>142125</td>
+    </tr>
+    <tr>
+      <th>1459</th>
+      <td>5</td>
+      <td>1256</td>
+      <td>1</td>
+      <td>276</td>
+      <td>1256</td>
+      <td>1256</td>
+      <td>147500</td>
+    </tr>
+  </tbody>
+</table>
+<p>1460 rows × 7 columns</p>
+</div>
+
+
+
+
+<pre><code class="lang-python">tmp = data.isnull().sum()
+tmp
+# tmp[tmp&gt;0].sort_values(ascending=False)
+</code></pre>
+<pre><code>OverallQual    0
+GrLivArea      0
+GarageCars     0
+GarageArea     0
+TotalBsmtSF    0
+1stFlrSF       0
+SalePrice      0
+dtype: int64
+</code></pre><h3 id="特征归一化"><a href="#特征归一化" class="headerlink" title="特征归一化"></a>特征归一化</h3><pre><code class="lang-python">sp = data.iloc[:, -1]
+data = (data - data.mean()) / data.std()
+data[&#39;SalePrice&#39;] = sp
+data
+</code></pre>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OverallQual</th>
+      <th>GrLivArea</th>
+      <th>GarageCars</th>
+      <th>GarageArea</th>
+      <th>TotalBsmtSF</th>
+      <th>1stFlrSF</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.651256</td>
+      <td>0.370207</td>
+      <td>0.311618</td>
+      <td>0.350880</td>
+      <td>-0.459145</td>
+      <td>-0.793162</td>
+      <td>208500</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.071812</td>
+      <td>-0.482347</td>
+      <td>0.311618</td>
+      <td>-0.060710</td>
+      <td>0.466305</td>
+      <td>0.257052</td>
+      <td>181500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.651256</td>
+      <td>0.514836</td>
+      <td>0.311618</td>
+      <td>0.631510</td>
+      <td>-0.313261</td>
+      <td>-0.627611</td>
+      <td>223500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.651256</td>
+      <td>0.383528</td>
+      <td>1.649742</td>
+      <td>0.790533</td>
+      <td>-0.687089</td>
+      <td>-0.521555</td>
+      <td>140000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.374324</td>
+      <td>1.298881</td>
+      <td>1.649742</td>
+      <td>1.697903</td>
+      <td>0.199611</td>
+      <td>-0.045596</td>
+      <td>250000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1455</th>
+      <td>-0.071812</td>
+      <td>0.250316</td>
+      <td>0.311618</td>
+      <td>-0.060710</td>
+      <td>-0.238040</td>
+      <td>-0.542249</td>
+      <td>175000</td>
+    </tr>
+    <tr>
+      <th>1456</th>
+      <td>-0.071812</td>
+      <td>1.061003</td>
+      <td>0.311618</td>
+      <td>0.126376</td>
+      <td>1.104547</td>
+      <td>2.354894</td>
+      <td>210000</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>0.651256</td>
+      <td>1.569110</td>
+      <td>-1.026506</td>
+      <td>-1.033560</td>
+      <td>0.215567</td>
+      <td>0.065634</td>
+      <td>266500</td>
+    </tr>
+    <tr>
+      <th>1458</th>
+      <td>-0.794879</td>
+      <td>-0.832502</td>
+      <td>-1.026506</td>
+      <td>-1.089686</td>
+      <td>0.046889</td>
+      <td>-0.218907</td>
+      <td>142125</td>
+    </tr>
+    <tr>
+      <th>1459</th>
+      <td>-0.794879</td>
+      <td>-0.493765</td>
+      <td>-1.026506</td>
+      <td>-0.921308</td>
+      <td>0.452629</td>
+      <td>0.241532</td>
+      <td>147500</td>
+    </tr>
+  </tbody>
+</table>
+<p>1460 rows × 7 columns</p>
+</div>
+
+
+
+<h2 id="四、多变量线性回归模型"><a href="#四、多变量线性回归模型" class="headerlink" title="四、多变量线性回归模型"></a>四、多变量线性回归模型</h2><h3 id="4-1-数据预处理"><a href="#4-1-数据预处理" class="headerlink" title="4.1 数据预处理"></a>4.1 数据预处理</h3><pre><code class="lang-python">data.insert(0, &#39;Ones&#39;, 1)
+data
+</code></pre>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Ones</th>
+      <th>OverallQual</th>
+      <th>GrLivArea</th>
+      <th>GarageCars</th>
+      <th>GarageArea</th>
+      <th>TotalBsmtSF</th>
+      <th>1stFlrSF</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0.651256</td>
+      <td>0.370207</td>
+      <td>0.311618</td>
+      <td>0.350880</td>
+      <td>-0.459145</td>
+      <td>-0.793162</td>
+      <td>208500</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>-0.071812</td>
+      <td>-0.482347</td>
+      <td>0.311618</td>
+      <td>-0.060710</td>
+      <td>0.466305</td>
+      <td>0.257052</td>
+      <td>181500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0.651256</td>
+      <td>0.514836</td>
+      <td>0.311618</td>
+      <td>0.631510</td>
+      <td>-0.313261</td>
+      <td>-0.627611</td>
+      <td>223500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>0.651256</td>
+      <td>0.383528</td>
+      <td>1.649742</td>
+      <td>0.790533</td>
+      <td>-0.687089</td>
+      <td>-0.521555</td>
+      <td>140000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>1.374324</td>
+      <td>1.298881</td>
+      <td>1.649742</td>
+      <td>1.697903</td>
+      <td>0.199611</td>
+      <td>-0.045596</td>
+      <td>250000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1455</th>
+      <td>1</td>
+      <td>-0.071812</td>
+      <td>0.250316</td>
+      <td>0.311618</td>
+      <td>-0.060710</td>
+      <td>-0.238040</td>
+      <td>-0.542249</td>
+      <td>175000</td>
+    </tr>
+    <tr>
+      <th>1456</th>
+      <td>1</td>
+      <td>-0.071812</td>
+      <td>1.061003</td>
+      <td>0.311618</td>
+      <td>0.126376</td>
+      <td>1.104547</td>
+      <td>2.354894</td>
+      <td>210000</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>1</td>
+      <td>0.651256</td>
+      <td>1.569110</td>
+      <td>-1.026506</td>
+      <td>-1.033560</td>
+      <td>0.215567</td>
+      <td>0.065634</td>
+      <td>266500</td>
+    </tr>
+    <tr>
+      <th>1458</th>
+      <td>1</td>
+      <td>-0.794879</td>
+      <td>-0.832502</td>
+      <td>-1.026506</td>
+      <td>-1.089686</td>
+      <td>0.046889</td>
+      <td>-0.218907</td>
+      <td>142125</td>
+    </tr>
+    <tr>
+      <th>1459</th>
+      <td>1</td>
+      <td>-0.794879</td>
+      <td>-0.493765</td>
+      <td>-1.026506</td>
+      <td>-0.921308</td>
+      <td>0.452629</td>
+      <td>0.241532</td>
+      <td>147500</td>
+    </tr>
+  </tbody>
+</table>
+<p>1460 rows × 8 columns</p>
+</div>
+
+
+
+
+<pre><code class="lang-python">cols = data.shape[1]
+x = data.iloc[:, 0:cols-1]
+y = data.iloc[:, cols-1:cols]
+</code></pre>
+<pre><code class="lang-python">x = np.matrix(x.values)
+y = np.matrix(y.values)
+theta = np.matrix(np.zeros(x.shape[1]))
+theta
+</code></pre>
+<pre><code>matrix([[0., 0., 0., 0., 0., 0., 0.]])
+</code></pre><h3 id="4-2-线性回归"><a href="#4-2-线性回归" class="headerlink" title="4.2 线性回归"></a>4.2 线性回归</h3><h4 id="计算损失函数"><a href="#计算损失函数" class="headerlink" title="计算损失函数"></a>计算损失函数</h4><pre><code class="lang-python">def computeCost(X, y, theta):
+    inner = np.power((X * theta.T - y), 2)
+    return np.sqrt(np.sum(inner) / (2 * len(X)))
+</code></pre>
+<h4 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h4><pre><code class="lang-python">def gradientDescent(x, y, theta, alpha, iters):
+#     存theta的向量
+    temp = np.matrix(np.zeros(theta.shape))
+#     参数（特征）数量
+    parameters = int(theta.ravel().shape[1])
+#     每一代的代价
+    cost = np.zeros(iters)
+    for i in range(iters):
+        error = (x * theta.T) - y
+        for j in range(parameters):
+            term = np.multiply(error, x[:, j])
+            temp[0, j] = theta[0, j] - ((alpha / len(x)) * np.sum(term))
+
+        theta = temp
+        cost[i] = computeCost(x, y, theta)
+    return theta, cost
+</code></pre>
+<pre><code class="lang-python">g1, cost1 = gradientDescent(x, y, theta, 0.01, 1500)
+g1
+</code></pre>
+<pre><code>matrix([[180921.14457104,  33281.60801039,  22604.1908728 ,
+          10412.0350517 ,   3775.32504803,  10488.68941045,
+           4493.38109433]])
+</code></pre><p>观察cost曲线，看看有没有收敛</p>
+<pre><code class="lang-python">t = np.linspace(0, 1500, 1500)
+plt.figure(figsize=(12, 8))
+plt.plot(t, cost1, label=&#39;scatter&#39;)
+plt.xlabel(&#39;iters&#39;)
+plt.ylabel(&#39;cost&#39;)
+plt.show()
+</code></pre>
+<p><img src="output_43_0.png" alt="png"></p>
+<pre><code class="lang-python">cost1
+</code></pre>
+<pre><code>array([137944.88106755, 136222.15953388, 134542.47251256, ...,
+        27400.60027344,  27400.59914954,  27400.5980284 ])
+</code></pre><h2 id="五、做预测"><a href="#五、做预测" class="headerlink" title="五、做预测"></a>五、做预测</h2><pre><code class="lang-python">data2 = test_data
+data2 = data2.loc[:, [&#39;OverallQual&#39;, &#39;GrLivArea&#39;, &#39;GarageCars&#39;, &#39;GarageArea&#39;, &#39;TotalBsmtSF&#39;, &#39;1stFlrSF&#39;]]
+</code></pre>
+<pre><code class="lang-python">tmp4 = data2.isnull().sum()
+tmp4[tmp4&gt;0].sort_values(ascending=False)
+</code></pre>
+<pre><code>TotalBsmtSF    1
+GarageArea     1
+GarageCars     1
+dtype: int64
+</code></pre><pre><code class="lang-python">cols = [&#39;TotalBsmtSF&#39;, &#39;GarageArea&#39;, &#39;GarageCars&#39;]
+for col in cols:
+    data2[col].fillna(0, inplace=True)
+# tmp4 = data2.isnull().sum()
+# tmp4[tmp4&gt;0].sort_values(ascending=False)
+</code></pre>
+<pre><code>Series([], dtype: int64)
+</code></pre><pre><code class="lang-python">data2 = (data2 - data2.mean()) / data2.std()
+data2.insert(0, &#39;Ones&#39;, 1)
+cols = data2.shape[1]
+x2 = np.matrix(data2.values)
+y2 = x2 * g1.T
+y2
+</code></pre>
+<pre><code>matrix([[115885.01852303],
+        [167400.04822819],
+        [160547.77546842],
+        ...,
+        [153666.34643612],
+        [ 94793.69583206],
+        [242838.70740226]])
+</code></pre><pre><code class="lang-python">df1 = pd.DataFrame(y2)
+tmp2 = df1.isnull().sum()
+tmp2
+# tmp2[tmp2&gt;0].sort_values(ascending=False)
+</code></pre>
+<pre><code>0    0
+dtype: int64
+</code></pre><pre><code class="lang-python">df = pd.DataFrame(y2)
+names=[&#39;SalePrice&#39;]
+df.columns = names
+test_data_output = pd.read_csv(test_path)
+df.insert(0, &#39;Id&#39;, test_data_output.iloc[:, 0])
+df.to_csv(&quot;submission2.csv&quot;, index=False, sep=&#39;,&#39;)
+</code></pre>

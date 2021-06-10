@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"benyang0506.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="一、采集数据1、导入数据分析数据格式123456import numpy as npimport pandas as pdimport matplotlib.pyplot as pltimport seaborn as snsimport warningsfrom sklearn.preprocessing import StandardScaler">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HousePrice">
+<meta property="og:url" content="https://benyang0506.github.io/2021/06/01/HousePrice/index.html">
+<meta property="og:site_name" content="阿犇">
+<meta property="og:description" content="一、采集数据1、导入数据分析数据格式123456import numpy as npimport pandas as pdimport matplotlib.pyplot as pltimport seaborn as snsimport warningsfrom sklearn.preprocessing import StandardScaler">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://benyang0506.github.io/.io//data_us1.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//data_us2.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_9_2.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_11_1.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_13_0.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_15_0.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_16_0.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_17_0.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_18_0.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_21_0.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_23_0.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_24_1.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//output_43_0.png">
+<meta property="og:image" content="https://benyang0506.github.io/.io//submit1.png">
+<meta property="article:published_time" content="2021-06-01T08:21:04.000Z">
+<meta property="article:modified_time" content="2021-06-01T08:54:28.686Z">
+<meta property="article:author" content="杨犇">
+<meta property="article:tag" content="线性回归">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://benyang0506.github.io/.io//data_us1.png">
+
+<link rel="canonical" href="https://benyang0506.github.io/2021/06/01/HousePrice/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>HousePrice | 阿犇</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+
+
+  
+<link rel="alternate" href="/atom.xml" title="阿犇" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    
+  <a href="#" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#70B7FD; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">阿犇</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录生活中的点点滴滴</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">6</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://benyang0506.github.io/2021/06/01/HousePrice/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/img/head.jpg">
+      <meta itemprop="name" content="杨犇">
+      <meta itemprop="description" content="直到这一刻微笑着说话为止，我至少留下了一公升眼泪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿犇">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          HousePrice
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-01 16:21:04 / 修改时间：16:54:28" itemprop="dateCreated datePublished" datetime="2021-06-01T16:21:04+08:00">2021-06-01</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">机器学习</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/kaggle/" itemprop="url" rel="index"><span itemprop="name">kaggle</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="一、采集数据"><a href="#一、采集数据" class="headerlink" title="一、采集数据"></a>一、采集数据</h2><h3 id="1、导入数据分析数据格式"><a href="#1、导入数据分析数据格式" class="headerlink" title="1、导入数据分析数据格式"></a>1、导入数据分析数据格式</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"><span class="keyword">import</span> warnings</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br></pre></td></tr></table></figure>
+<span id="more"></span>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">train_path = <span class="string">&#x27;train.csv&#x27;</span></span><br><span class="line">train_data = pd.read_csv(train_path)</span><br><span class="line">train_data = train_data.drop(<span class="string">&#x27;Id&#x27;</span>, axis=<span class="number">1</span>)</span><br><span class="line">test_path = <span class="string">&#x27;test.csv&#x27;</span></span><br><span class="line">test_data = pd.read_csv(test_path)</span><br><span class="line">test_data = test_data.drop(<span class="string">&#x27;Id&#x27;</span>, axis=<span class="number">1</span>)</span><br><span class="line">test_data</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.dataframe tbody tr th &#123;</span><br><span class="line">    vertical-align: top;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.dataframe thead th &#123;</span><br><span class="line">    text-align: right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</style>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MSSubClass</th>
+      <th>MSZoning</th>
+      <th>LotFrontage</th>
+      <th>LotArea</th>
+      <th>Street</th>
+      <th>Alley</th>
+      <th>LotShape</th>
+      <th>LandContour</th>
+      <th>Utilities</th>
+      <th>LotConfig</th>
+      <th>...</th>
+      <th>ScreenPorch</th>
+      <th>PoolArea</th>
+      <th>PoolQC</th>
+      <th>Fence</th>
+      <th>MiscFeature</th>
+      <th>MiscVal</th>
+      <th>MoSold</th>
+      <th>YrSold</th>
+      <th>SaleType</th>
+      <th>SaleCondition</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>20</td>
+      <td>RH</td>
+      <td>80.0</td>
+      <td>11622</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>120</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>20</td>
+      <td>RL</td>
+      <td>81.0</td>
+      <td>14267</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Corner</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>Gar2</td>
+      <td>12500</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>60</td>
+      <td>RL</td>
+      <td>74.0</td>
+      <td>13830</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>3</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>60</td>
+      <td>RL</td>
+      <td>78.0</td>
+      <td>9978</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>120</td>
+      <td>RL</td>
+      <td>43.0</td>
+      <td>5005</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>IR1</td>
+      <td>HLS</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>144</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>1</td>
+      <td>2010</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1454</th>
+      <td>160</td>
+      <td>RM</td>
+      <td>21.0</td>
+      <td>1936</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>6</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>1455</th>
+      <td>160</td>
+      <td>RM</td>
+      <td>21.0</td>
+      <td>1894</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>4</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Abnorml</td>
+    </tr>
+    <tr>
+      <th>1456</th>
+      <td>20</td>
+      <td>RL</td>
+      <td>160.0</td>
+      <td>20000</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>9</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Abnorml</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>85</td>
+      <td>RL</td>
+      <td>62.0</td>
+      <td>10441</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>MnPrv</td>
+      <td>Shed</td>
+      <td>700</td>
+      <td>7</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+    <tr>
+      <th>1458</th>
+      <td>60</td>
+      <td>RL</td>
+      <td>74.0</td>
+      <td>9627</td>
+      <td>Pave</td>
+      <td>NaN</td>
+      <td>Reg</td>
+      <td>Lvl</td>
+      <td>AllPub</td>
+      <td>Inside</td>
+      <td>...</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>11</td>
+      <td>2006</td>
+      <td>WD</td>
+      <td>Normal</td>
+    </tr>
+  </tbody>
+</table>
+<p>1459 rows × 79 columns</p>
+
+</div>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tmp3 =train_data.isnull().<span class="built_in">sum</span>()</span><br><span class="line"><span class="comment"># tmp3</span></span><br><span class="line">tmp3[tmp3&gt;<span class="number">0</span>].sort_values(ascending=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">PoolQC          1453</span><br><span class="line">MiscFeature     1406</span><br><span class="line">Alley           1369</span><br><span class="line">Fence           1179</span><br><span class="line">FireplaceQu      690</span><br><span class="line">LotFrontage      259</span><br><span class="line">GarageYrBlt       81</span><br><span class="line">GarageType        81</span><br><span class="line">GarageFinish      81</span><br><span class="line">GarageQual        81</span><br><span class="line">GarageCond        81</span><br><span class="line">BsmtFinType2      38</span><br><span class="line">BsmtExposure      38</span><br><span class="line">BsmtFinType1      37</span><br><span class="line">BsmtCond          37</span><br><span class="line">BsmtQual          37</span><br><span class="line">MasVnrArea         8</span><br><span class="line">MasVnrType         8</span><br><span class="line">Electrical         1</span><br><span class="line">dtype: int64</span><br></pre></td></tr></table></figure>
+<h3 id="2、理解数据"><a href="#2、理解数据" class="headerlink" title="2、理解数据"></a>2、理解数据</h3><hr>
+<p><img src="/.io//data_us1.png" alt></p>
+<p><img src="/.io//data_us2.png" alt></p>
+<h2 id="二、探索性可视化"><a href="#二、探索性可视化" class="headerlink" title="二、探索性可视化"></a>二、探索性可视化</h2><h3 id="2-1-售价"><a href="#2-1-售价" class="headerlink" title="2.1 售价"></a>2.1 售价</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">train_data[<span class="string">&#x27;SalePrice&#x27;</span>].describe()</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">count      1460.000000</span><br><span class="line">mean     180921.195890</span><br><span class="line">std       79442.502883</span><br><span class="line">min       34900.000000</span><br><span class="line">25%      129975.000000</span><br><span class="line">50%      163000.000000</span><br><span class="line">75%      214000.000000</span><br><span class="line">max      755000.000000</span><br><span class="line">Name: SalePrice, dtype: float64</span><br></pre></td></tr></table></figure>
+<p>通过观察，SalePrice没有无效或者非数值数据</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plt.figure(figsize = (<span class="number">12</span>, <span class="number">8</span>))</span><br><span class="line"><span class="comment"># sns.set()</span></span><br><span class="line">sns.displot(train_data[<span class="string">&#x27;SalePrice&#x27;</span>])</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;seaborn.axisgrid.FacetGrid at 0x1ece6c52e50&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;Figure size 864x576 with 0 Axes&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_9_2.png" alt></p>
+<p>​    </p>
+<h3 id="2-2-售价与房屋面积"><a href="#2-2-售价与房屋面积" class="headerlink" title="2.2 售价与房屋面积"></a>2.2 售价与房屋面积</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># warnings.filterwarnings(&#x27;ignore&#x27;)</span></span><br><span class="line"><span class="comment"># plt.figure(figsize=(12, 8))</span></span><br><span class="line"><span class="comment"># plt.scatter(train_data[&#x27;LotArea&#x27;], train_data[&#x27;SalePrice&#x27;])</span></span><br><span class="line"><span class="comment"># plt.xlabel(&#x27;LotArea&#x27;)</span></span><br><span class="line"><span class="comment"># plt.ylabel(&#x27;SalePrice&#x27;)</span></span><br><span class="line"><span class="comment"># plt.show()</span></span><br><span class="line">sns.relplot(<span class="string">&#x27;LotArea&#x27;</span>, <span class="string">&#x27;SalePrice&#x27;</span>, data=train_data, kind=<span class="string">&#x27;scatter&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;seaborn.axisgrid.FacetGrid at 0x1ece819e7c0&gt;</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_11_1.png" alt="png"></p>
+<p>​    </p>
+<h3 id="2-3-售价与建造时间"><a href="#2-3-售价与建造时间" class="headerlink" title="2.3 售价与建造时间"></a>2.3 售价与建造时间</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plt.figure(figsize=(<span class="number">12</span>, <span class="number">8</span>))</span><br><span class="line">sns.boxplot(train_data[<span class="string">&#x27;YearBuilt&#x27;</span>], train_data[<span class="string">&#x27;SalePrice&#x27;</span>])</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_13_0.png" alt="png"></p>
+<p>​    </p>
+<h3 id="2-4-售价与地理位置"><a href="#2-4-售价与地理位置" class="headerlink" title="2.4 售价与地理位置"></a>2.4 售价与地理位置</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># plt.figure(figsize=(12, 8))</span></span><br><span class="line"><span class="comment"># sns.boxplot(train_data[&#x27;Neighborhood&#x27;], train_data[&#x27;SalePrice&#x27;])</span></span><br><span class="line">g = sns.catplot(<span class="string">&#x27;Neighborhood&#x27;</span>, <span class="string">&#x27;SalePrice&#x27;</span>, data=train_data, kind=<span class="string">&#x27;strip&#x27;</span>)</span><br><span class="line">g.fig.set_size_inches(<span class="number">12</span>, <span class="number">8</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_15_0.png" alt="png"></p>
+<p>​    </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">g = sns.catplot(<span class="string">&#x27;Neighborhood&#x27;</span>, <span class="string">&#x27;SalePrice&#x27;</span>, data=train_data, kind=<span class="string">&#x27;point&#x27;</span>)</span><br><span class="line">g.fig.set_size_inches(<span class="number">12</span>, <span class="number">8</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_16_0.png" alt="png"></p>
+<p>​    </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">g = sns.catplot(<span class="string">&#x27;Neighborhood&#x27;</span>, <span class="string">&#x27;SalePrice&#x27;</span>, data=train_data, kind=<span class="string">&#x27;bar&#x27;</span>)</span><br><span class="line">g.fig.set_size_inches(<span class="number">12</span>, <span class="number">8</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_17_0.png" alt="png"></p>
+<p>​    </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">g = sns.catplot(<span class="string">&#x27;Neighborhood&#x27;</span>, <span class="string">&#x27;SalePrice&#x27;</span>, data=train_data, kind=<span class="string">&#x27;box&#x27;</span>)</span><br><span class="line">g.fig.set_size_inches(<span class="number">12</span>, <span class="number">8</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_18_0.png" alt="png"></p>
+<p>​    </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># g = sns.catplot(&#x27;Neighborhood&#x27;, &#x27;SalePrice&#x27;, data=train_data, kind=&#x27;violin&#x27;)</span></span><br><span class="line"><span class="comment"># g.fig.set_size_inches(12, 8)</span></span><br><span class="line"><span class="comment"># plt.show()</span></span><br></pre></td></tr></table></figure>
+<h3 id="2-5-售价与装修评级"><a href="#2-5-售价与装修评级" class="headerlink" title="2.5 售价与装修评级"></a>2.5 售价与装修评级</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">g = sns.catplot(<span class="string">&#x27;OverallQual&#x27;</span>, <span class="string">&#x27;SalePrice&#x27;</span>, data=train_data, kind=<span class="string">&#x27;box&#x27;</span>)</span><br><span class="line">g.fig.set_size_inches(<span class="number">12</span>, <span class="number">8</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_21_0.png" alt="png"></p>
+<p>​    </p>
+<h2 id="三、特征提取"><a href="#三、特征提取" class="headerlink" title="三、特征提取"></a>三、特征提取</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plt.figure(figsize=(<span class="number">12</span>, <span class="number">8</span>))</span><br><span class="line">corrmat = train_data.corr()</span><br><span class="line">sns.heatmap(corrmat, annot=<span class="literal">False</span>, vmax=<span class="number">1</span>, vmin=-<span class="number">1</span>)</span><br><span class="line">plt.show()</span><br><span class="line">corrmat[<span class="string">&#x27;SalePrice&#x27;</span>].sort_values(ascending=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_23_0.png" alt="png"></p>
+<p>​    </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">SalePrice        1.000000</span><br><span class="line">OverallQual      0.790982</span><br><span class="line">GrLivArea        0.708624</span><br><span class="line">GarageCars       0.640409</span><br><span class="line">GarageArea       0.623431</span><br><span class="line">TotalBsmtSF      0.613581</span><br><span class="line">1stFlrSF         0.605852</span><br><span class="line">FullBath         0.560664</span><br><span class="line">TotRmsAbvGrd     0.533723</span><br><span class="line">YearBuilt        0.522897</span><br><span class="line">YearRemodAdd     0.507101</span><br><span class="line">GarageYrBlt      0.486362</span><br><span class="line">MasVnrArea       0.477493</span><br><span class="line">Fireplaces       0.466929</span><br><span class="line">BsmtFinSF1       0.386420</span><br><span class="line">LotFrontage      0.351799</span><br><span class="line">WoodDeckSF       0.324413</span><br><span class="line">2ndFlrSF         0.319334</span><br><span class="line">OpenPorchSF      0.315856</span><br><span class="line">HalfBath         0.284108</span><br><span class="line">LotArea          0.263843</span><br><span class="line">BsmtFullBath     0.227122</span><br><span class="line">BsmtUnfSF        0.214479</span><br><span class="line">BedroomAbvGr     0.168213</span><br><span class="line">ScreenPorch      0.111447</span><br><span class="line">PoolArea         0.092404</span><br><span class="line">MoSold           0.046432</span><br><span class="line">3SsnPorch        0.044584</span><br><span class="line">BsmtFinSF2      -0.011378</span><br><span class="line">BsmtHalfBath    -0.016844</span><br><span class="line">MiscVal         -0.021190</span><br><span class="line">LowQualFinSF    -0.025606</span><br><span class="line">YrSold          -0.028923</span><br><span class="line">OverallCond     -0.077856</span><br><span class="line">MSSubClass      -0.084284</span><br><span class="line">EnclosedPorch   -0.128578</span><br><span class="line">KitchenAbvGr    -0.135907</span><br><span class="line">Name: SalePrice, dtype: float64</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">plt.figure(figsize=(<span class="number">12</span>, <span class="number">8</span>))</span><br><span class="line">SPcorrmat = train_data.corr()[<span class="string">u&#x27;SalePrice&#x27;</span>]</span><br><span class="line">SPcorrmat = SPcorrmat.sort_values(key=<span class="built_in">abs</span>, ascending=<span class="literal">False</span>)</span><br><span class="line"><span class="comment"># 和上面取出的结果一样</span></span><br><span class="line">plt.plot(SPcorrmat.head(<span class="number">10</span>))</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&lt;matplotlib.lines.Line2D at 0x1ecf2abffa0&gt;]</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_24_1.png" alt="png"></p>
+<p>​    </p>
+<p>取与SalePrice相关性较大的几个特征，暂时先取6个。<br>OverallQual、GrLivArea、GarageCars、GarageArea、TotalBsmtSF、1stFlrSF</p>
+<h3 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">path = <span class="string">&#x27;extracted_data.csv&#x27;</span></span><br><span class="line">data = pd.read_csv(path)</span><br><span class="line">data</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.dataframe tbody tr th &#123;</span><br><span class="line">    vertical-align: top;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.dataframe thead th &#123;</span><br><span class="line">    text-align: right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</style>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OverallQual</th>
+      <th>GrLivArea</th>
+      <th>GarageCars</th>
+      <th>GarageArea</th>
+      <th>TotalBsmtSF</th>
+      <th>1stFlrSF</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7</td>
+      <td>1710</td>
+      <td>2</td>
+      <td>548</td>
+      <td>856</td>
+      <td>856</td>
+      <td>208500</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>6</td>
+      <td>1262</td>
+      <td>2</td>
+      <td>460</td>
+      <td>1262</td>
+      <td>1262</td>
+      <td>181500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>7</td>
+      <td>1786</td>
+      <td>2</td>
+      <td>608</td>
+      <td>920</td>
+      <td>920</td>
+      <td>223500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>7</td>
+      <td>1717</td>
+      <td>3</td>
+      <td>642</td>
+      <td>756</td>
+      <td>961</td>
+      <td>140000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>8</td>
+      <td>2198</td>
+      <td>3</td>
+      <td>836</td>
+      <td>1145</td>
+      <td>1145</td>
+      <td>250000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1455</th>
+      <td>6</td>
+      <td>1647</td>
+      <td>2</td>
+      <td>460</td>
+      <td>953</td>
+      <td>953</td>
+      <td>175000</td>
+    </tr>
+    <tr>
+      <th>1456</th>
+      <td>6</td>
+      <td>2073</td>
+      <td>2</td>
+      <td>500</td>
+      <td>1542</td>
+      <td>2073</td>
+      <td>210000</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>7</td>
+      <td>2340</td>
+      <td>1</td>
+      <td>252</td>
+      <td>1152</td>
+      <td>1188</td>
+      <td>266500</td>
+    </tr>
+    <tr>
+      <th>1458</th>
+      <td>5</td>
+      <td>1078</td>
+      <td>1</td>
+      <td>240</td>
+      <td>1078</td>
+      <td>1078</td>
+      <td>142125</td>
+    </tr>
+    <tr>
+      <th>1459</th>
+      <td>5</td>
+      <td>1256</td>
+      <td>1</td>
+      <td>276</td>
+      <td>1256</td>
+      <td>1256</td>
+      <td>147500</td>
+    </tr>
+  </tbody>
+</table>
+<p>1460 rows × 7 columns</p>
+
+</div>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tmp = data.isnull().<span class="built_in">sum</span>()</span><br><span class="line">tmp</span><br><span class="line"><span class="comment"># tmp[tmp&gt;0].sort_values(ascending=False)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">OverallQual    0</span><br><span class="line">GrLivArea      0</span><br><span class="line">GarageCars     0</span><br><span class="line">GarageArea     0</span><br><span class="line">TotalBsmtSF    0</span><br><span class="line">1stFlrSF       0</span><br><span class="line">SalePrice      0</span><br><span class="line">dtype: int64</span><br></pre></td></tr></table></figure>
+<h3 id="特征归一化"><a href="#特征归一化" class="headerlink" title="特征归一化"></a>特征归一化</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sp = data.iloc[:, -<span class="number">1</span>]</span><br><span class="line">data = (data - data.mean()) / data.std()</span><br><span class="line">data[<span class="string">&#x27;SalePrice&#x27;</span>] = sp</span><br><span class="line">data</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.dataframe tbody tr th &#123;</span><br><span class="line">    vertical-align: top;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.dataframe thead th &#123;</span><br><span class="line">    text-align: right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</style>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OverallQual</th>
+      <th>GrLivArea</th>
+      <th>GarageCars</th>
+      <th>GarageArea</th>
+      <th>TotalBsmtSF</th>
+      <th>1stFlrSF</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.651256</td>
+      <td>0.370207</td>
+      <td>0.311618</td>
+      <td>0.350880</td>
+      <td>-0.459145</td>
+      <td>-0.793162</td>
+      <td>208500</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>-0.071812</td>
+      <td>-0.482347</td>
+      <td>0.311618</td>
+      <td>-0.060710</td>
+      <td>0.466305</td>
+      <td>0.257052</td>
+      <td>181500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.651256</td>
+      <td>0.514836</td>
+      <td>0.311618</td>
+      <td>0.631510</td>
+      <td>-0.313261</td>
+      <td>-0.627611</td>
+      <td>223500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.651256</td>
+      <td>0.383528</td>
+      <td>1.649742</td>
+      <td>0.790533</td>
+      <td>-0.687089</td>
+      <td>-0.521555</td>
+      <td>140000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1.374324</td>
+      <td>1.298881</td>
+      <td>1.649742</td>
+      <td>1.697903</td>
+      <td>0.199611</td>
+      <td>-0.045596</td>
+      <td>250000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1455</th>
+      <td>-0.071812</td>
+      <td>0.250316</td>
+      <td>0.311618</td>
+      <td>-0.060710</td>
+      <td>-0.238040</td>
+      <td>-0.542249</td>
+      <td>175000</td>
+    </tr>
+    <tr>
+      <th>1456</th>
+      <td>-0.071812</td>
+      <td>1.061003</td>
+      <td>0.311618</td>
+      <td>0.126376</td>
+      <td>1.104547</td>
+      <td>2.354894</td>
+      <td>210000</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>0.651256</td>
+      <td>1.569110</td>
+      <td>-1.026506</td>
+      <td>-1.033560</td>
+      <td>0.215567</td>
+      <td>0.065634</td>
+      <td>266500</td>
+    </tr>
+    <tr>
+      <th>1458</th>
+      <td>-0.794879</td>
+      <td>-0.832502</td>
+      <td>-1.026506</td>
+      <td>-1.089686</td>
+      <td>0.046889</td>
+      <td>-0.218907</td>
+      <td>142125</td>
+    </tr>
+    <tr>
+      <th>1459</th>
+      <td>-0.794879</td>
+      <td>-0.493765</td>
+      <td>-1.026506</td>
+      <td>-0.921308</td>
+      <td>0.452629</td>
+      <td>0.241532</td>
+      <td>147500</td>
+    </tr>
+  </tbody>
+</table>
+<p>1460 rows × 7 columns</p>
+
+</div>
+
+
+
+<h2 id="四、多变量线性回归模型"><a href="#四、多变量线性回归模型" class="headerlink" title="四、多变量线性回归模型"></a>四、多变量线性回归模型</h2><h3 id="4-1-数据预处理"><a href="#4-1-数据预处理" class="headerlink" title="4.1 数据预处理"></a>4.1 数据预处理</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data.insert(<span class="number">0</span>, <span class="string">&#x27;Ones&#x27;</span>, <span class="number">1</span>)</span><br><span class="line">data</span><br></pre></td></tr></table></figure>
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">.dataframe tbody tr th &#123;</span><br><span class="line">    vertical-align: top;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">.dataframe thead th &#123;</span><br><span class="line">    text-align: right;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</style>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Ones</th>
+      <th>OverallQual</th>
+      <th>GrLivArea</th>
+      <th>GarageCars</th>
+      <th>GarageArea</th>
+      <th>TotalBsmtSF</th>
+      <th>1stFlrSF</th>
+      <th>SalePrice</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0.651256</td>
+      <td>0.370207</td>
+      <td>0.311618</td>
+      <td>0.350880</td>
+      <td>-0.459145</td>
+      <td>-0.793162</td>
+      <td>208500</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>-0.071812</td>
+      <td>-0.482347</td>
+      <td>0.311618</td>
+      <td>-0.060710</td>
+      <td>0.466305</td>
+      <td>0.257052</td>
+      <td>181500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1</td>
+      <td>0.651256</td>
+      <td>0.514836</td>
+      <td>0.311618</td>
+      <td>0.631510</td>
+      <td>-0.313261</td>
+      <td>-0.627611</td>
+      <td>223500</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1</td>
+      <td>0.651256</td>
+      <td>0.383528</td>
+      <td>1.649742</td>
+      <td>0.790533</td>
+      <td>-0.687089</td>
+      <td>-0.521555</td>
+      <td>140000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1</td>
+      <td>1.374324</td>
+      <td>1.298881</td>
+      <td>1.649742</td>
+      <td>1.697903</td>
+      <td>0.199611</td>
+      <td>-0.045596</td>
+      <td>250000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1455</th>
+      <td>1</td>
+      <td>-0.071812</td>
+      <td>0.250316</td>
+      <td>0.311618</td>
+      <td>-0.060710</td>
+      <td>-0.238040</td>
+      <td>-0.542249</td>
+      <td>175000</td>
+    </tr>
+    <tr>
+      <th>1456</th>
+      <td>1</td>
+      <td>-0.071812</td>
+      <td>1.061003</td>
+      <td>0.311618</td>
+      <td>0.126376</td>
+      <td>1.104547</td>
+      <td>2.354894</td>
+      <td>210000</td>
+    </tr>
+    <tr>
+      <th>1457</th>
+      <td>1</td>
+      <td>0.651256</td>
+      <td>1.569110</td>
+      <td>-1.026506</td>
+      <td>-1.033560</td>
+      <td>0.215567</td>
+      <td>0.065634</td>
+      <td>266500</td>
+    </tr>
+    <tr>
+      <th>1458</th>
+      <td>1</td>
+      <td>-0.794879</td>
+      <td>-0.832502</td>
+      <td>-1.026506</td>
+      <td>-1.089686</td>
+      <td>0.046889</td>
+      <td>-0.218907</td>
+      <td>142125</td>
+    </tr>
+    <tr>
+      <th>1459</th>
+      <td>1</td>
+      <td>-0.794879</td>
+      <td>-0.493765</td>
+      <td>-1.026506</td>
+      <td>-0.921308</td>
+      <td>0.452629</td>
+      <td>0.241532</td>
+      <td>147500</td>
+    </tr>
+  </tbody>
+</table>
+<p>1460 rows × 8 columns</p>
+
+</div>
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cols = data.shape[<span class="number">1</span>]</span><br><span class="line">x = data.iloc[:, <span class="number">0</span>:cols-<span class="number">1</span>]</span><br><span class="line">y = data.iloc[:, cols-<span class="number">1</span>:cols]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">x = np.matrix(x.values)</span><br><span class="line">y = np.matrix(y.values)</span><br><span class="line">theta = np.matrix(np.zeros(x.shape[<span class="number">1</span>]))</span><br><span class="line">theta</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">matrix([[0., 0., 0., 0., 0., 0., 0.]])</span><br></pre></td></tr></table></figure>
+<h3 id="4-2-线性回归"><a href="#4-2-线性回归" class="headerlink" title="4.2 线性回归"></a>4.2 线性回归</h3><h4 id="计算损失函数"><a href="#计算损失函数" class="headerlink" title="计算损失函数"></a>计算损失函数</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">computeCost</span>(<span class="params">X, y, theta</span>):</span></span><br><span class="line">    inner = np.power((X * theta.T - y), <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">return</span> np.sqrt(np.<span class="built_in">sum</span>(inner) / (<span class="number">2</span> * <span class="built_in">len</span>(X)))</span><br></pre></td></tr></table></figure>
+<h4 id="梯度下降"><a href="#梯度下降" class="headerlink" title="梯度下降"></a>梯度下降</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradientDescent</span>(<span class="params">x, y, theta, alpha, iters</span>):</span></span><br><span class="line"><span class="comment">#     存theta的向量</span></span><br><span class="line">    temp = np.matrix(np.zeros(theta.shape))</span><br><span class="line"><span class="comment">#     参数（特征）数量</span></span><br><span class="line">    parameters = <span class="built_in">int</span>(theta.ravel().shape[<span class="number">1</span>])</span><br><span class="line"><span class="comment">#     每一代的代价</span></span><br><span class="line">    cost = np.zeros(iters)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(iters):</span><br><span class="line">        error = (x * theta.T) - y</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(parameters):</span><br><span class="line">            term = np.multiply(error, x[:, j])</span><br><span class="line">            temp[<span class="number">0</span>, j] = theta[<span class="number">0</span>, j] - ((alpha / <span class="built_in">len</span>(x)) * np.<span class="built_in">sum</span>(term))</span><br><span class="line">        </span><br><span class="line">        theta = temp</span><br><span class="line">        cost[i] = computeCost(x, y, theta)</span><br><span class="line">    <span class="keyword">return</span> theta, cost</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g1, cost1 = gradientDescent(x, y, theta, <span class="number">0.01</span>, <span class="number">1500</span>)</span><br><span class="line">g1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">matrix([[180921.14457104,  33281.60801039,  22604.1908728 ,</span><br><span class="line">          10412.0350517 ,   3775.32504803,  10488.68941045,</span><br><span class="line">           4493.38109433]])</span><br></pre></td></tr></table></figure>
+<p>观察cost曲线，看看有没有收敛</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">t = np.linspace(<span class="number">0</span>, <span class="number">1500</span>, <span class="number">1500</span>)</span><br><span class="line">plt.figure(figsize=(<span class="number">12</span>, <span class="number">8</span>))</span><br><span class="line">plt.plot(t, cost1, label=<span class="string">&#x27;scatter&#x27;</span>)</span><br><span class="line">plt.xlabel(<span class="string">&#x27;iters&#x27;</span>)</span><br><span class="line">plt.ylabel(<span class="string">&#x27;cost&#x27;</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="/.io//output_43_0.png" alt="png"></p>
+<p>​    </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cost1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">array([137944.88106755, 136222.15953388, 134542.47251256, ...,</span><br><span class="line">        27400.60027344,  27400.59914954,  27400.5980284 ])</span><br></pre></td></tr></table></figure>
+<h2 id="五、做预测"><a href="#五、做预测" class="headerlink" title="五、做预测"></a>五、做预测</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data2 = test_data</span><br><span class="line">data2 = data2.loc[:, [<span class="string">&#x27;OverallQual&#x27;</span>, <span class="string">&#x27;GrLivArea&#x27;</span>, <span class="string">&#x27;GarageCars&#x27;</span>, <span class="string">&#x27;GarageArea&#x27;</span>, <span class="string">&#x27;TotalBsmtSF&#x27;</span>, <span class="string">&#x27;1stFlrSF&#x27;</span>]]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tmp4 = data2.isnull().<span class="built_in">sum</span>()</span><br><span class="line">tmp4[tmp4&gt;<span class="number">0</span>].sort_values(ascending=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TotalBsmtSF    1</span><br><span class="line">GarageArea     1</span><br><span class="line">GarageCars     1</span><br><span class="line">dtype: int64</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cols = [<span class="string">&#x27;TotalBsmtSF&#x27;</span>, <span class="string">&#x27;GarageArea&#x27;</span>, <span class="string">&#x27;GarageCars&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> col <span class="keyword">in</span> cols:</span><br><span class="line">    data2[col].fillna(<span class="number">0</span>, inplace=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># tmp4 = data2.isnull().sum()</span></span><br><span class="line"><span class="comment"># tmp4[tmp4&gt;0].sort_values(ascending=False)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Series([], dtype: int64)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data2 = (data2 - data2.mean()) / data2.std()</span><br><span class="line">data2.insert(<span class="number">0</span>, <span class="string">&#x27;Ones&#x27;</span>, <span class="number">1</span>)</span><br><span class="line">cols = data2.shape[<span class="number">1</span>]</span><br><span class="line">x2 = np.matrix(data2.values)</span><br><span class="line">y2 = x2 * g1.T</span><br><span class="line">y2</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">matrix([[115885.01852303],</span><br><span class="line">        [167400.04822819],</span><br><span class="line">        [160547.77546842],</span><br><span class="line">        ...,</span><br><span class="line">        [153666.34643612],</span><br><span class="line">        [ 94793.69583206],</span><br><span class="line">        [242838.70740226]])</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">df1 = pd.DataFrame(y2)</span><br><span class="line">tmp2 = df1.isnull().<span class="built_in">sum</span>()</span><br><span class="line">tmp2</span><br><span class="line"><span class="comment"># tmp2[tmp2&gt;0].sort_values(ascending=False)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">0    0</span><br><span class="line">dtype: int64</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">df = pd.DataFrame(y2)</span><br><span class="line">names=[<span class="string">&#x27;SalePrice&#x27;</span>]</span><br><span class="line">df.columns = names</span><br><span class="line">test_data_output = pd.read_csv(test_path)</span><br><span class="line">df.insert(<span class="number">0</span>, <span class="string">&#x27;Id&#x27;</span>, test_data_output.iloc[:, <span class="number">0</span>])</span><br><span class="line">df.to_csv(<span class="string">&quot;submission2.csv&quot;</span>, index=<span class="literal">False</span>, sep=<span class="string">&#x27;,&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="六、在kaggle上提交"><a href="#六、在kaggle上提交" class="headerlink" title="六、在kaggle上提交"></a>六、在kaggle上提交</h2><p><img src="/.io//submit1.png" alt></p>
+
+    </div>
+
+
+    
+    
+    
+        <div class="reward-container">
+  <div>您的支持是我继续创作的最大动力！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="杨犇 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="杨犇 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>杨犇
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://benyang0506.github.io/2021/06/01/HousePrice/" title="HousePrice">https://benyang0506.github.io/2021/06/01/HousePrice/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="tag"># 线性回归</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/05/31/4%E7%9A%84%E5%B9%82/" rel="prev" title="4的幂">
+      <i class="fa fa-chevron-left"></i> 4的幂
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/02/%E8%BF%9E%E7%BB%AD%E7%9A%84%E5%AD%90%E6%95%B0%E7%BB%84%E5%92%8C/" rel="next" title="连续的子数组和">
+      连续的子数组和 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E9%87%87%E9%9B%86%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">一、采集数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E5%AF%BC%E5%85%A5%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90%E6%95%B0%E6%8D%AE%E6%A0%BC%E5%BC%8F"><span class="nav-number">1.1.</span> <span class="nav-text">1、导入数据分析数据格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E7%90%86%E8%A7%A3%E6%95%B0%E6%8D%AE"><span class="nav-number">1.2.</span> <span class="nav-text">2、理解数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E6%8E%A2%E7%B4%A2%E6%80%A7%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">2.</span> <span class="nav-text">二、探索性可视化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E5%94%AE%E4%BB%B7"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 售价</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%94%AE%E4%BB%B7%E4%B8%8E%E6%88%BF%E5%B1%8B%E9%9D%A2%E7%A7%AF"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 售价与房屋面积</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E5%94%AE%E4%BB%B7%E4%B8%8E%E5%BB%BA%E9%80%A0%E6%97%B6%E9%97%B4"><span class="nav-number">2.3.</span> <span class="nav-text">2.3 售价与建造时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E5%94%AE%E4%BB%B7%E4%B8%8E%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE"><span class="nav-number">2.4.</span> <span class="nav-text">2.4 售价与地理位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-5-%E5%94%AE%E4%BB%B7%E4%B8%8E%E8%A3%85%E4%BF%AE%E8%AF%84%E7%BA%A7"><span class="nav-number">2.5.</span> <span class="nav-text">2.5 售价与装修评级</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%89%B9%E5%BE%81%E6%8F%90%E5%8F%96"><span class="nav-number">3.</span> <span class="nav-text">三、特征提取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97"><span class="nav-number">3.1.</span> <span class="nav-text">数据清洗</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">3.2.</span> <span class="nav-text">特征归一化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%A4%9A%E5%8F%98%E9%87%8F%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E6%A8%A1%E5%9E%8B"><span class="nav-number">4.</span> <span class="nav-text">四、多变量线性回归模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 数据预处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 线性回归</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">4.2.1.</span> <span class="nav-text">计算损失函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A2%AF%E5%BA%A6%E4%B8%8B%E9%99%8D"><span class="nav-number">4.2.2.</span> <span class="nav-text">梯度下降</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E5%81%9A%E9%A2%84%E6%B5%8B"><span class="nav-number">5.</span> <span class="nav-text">五、做预测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%9C%A8kaggle%E4%B8%8A%E6%8F%90%E4%BA%A4"><span class="nav-number">6.</span> <span class="nav-text">六、在kaggle上提交</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="杨犇"
+      src="/assets/img/head.jpg">
+  <p class="site-author-name" itemprop="name">杨犇</p>
+  <div class="site-description" itemprop="description">直到这一刻微笑着说话为止，我至少留下了一公升眼泪</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/benyang0506" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;benyang0506" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yb</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script color='' opacity='' zIndex='' count='' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+  
+</body>
+</html>
