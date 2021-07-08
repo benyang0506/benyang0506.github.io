@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"benyang0506.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="第246场周赛 D 传送门：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;minimum-absolute-difference-queries&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="查询差绝对值的最小值">
+<meta property="og:url" content="https://benyang0506.github.io/2021/06/23/%E6%9F%A5%E8%AF%A2%E5%B7%AE%E7%BB%9D%E5%AF%B9%E5%80%BC%E7%9A%84%E6%9C%80%E5%B0%8F%E5%80%BC/index.html">
+<meta property="og:site_name" content="阿犇">
+<meta property="og:description" content="第246场周赛 D 传送门：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;minimum-absolute-difference-queries&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-06-23T06:01:28.000Z">
+<meta property="article:modified_time" content="2021-06-23T06:26:06.613Z">
+<meta property="article:author" content="杨犇">
+<meta property="article:tag" content="哈希表">
+<meta property="article:tag" content="前缀和">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://benyang0506.github.io/2021/06/23/%E6%9F%A5%E8%AF%A2%E5%B7%AE%E7%BB%9D%E5%AF%B9%E5%80%BC%E7%9A%84%E6%9C%80%E5%B0%8F%E5%80%BC/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>查询差绝对值的最小值 | 阿犇</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+
+
+
+  
+<link rel="alternate" href="/atom.xml" title="阿犇" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+    
+  <a href="#" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#70B7FD; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">阿犇</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">记录生活中的点点滴滴</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">14</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">7</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">23</span></a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://benyang0506.github.io/2021/06/23/%E6%9F%A5%E8%AF%A2%E5%B7%AE%E7%BB%9D%E5%AF%B9%E5%80%BC%E7%9A%84%E6%9C%80%E5%B0%8F%E5%80%BC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/assets/img/head.jpg">
+      <meta itemprop="name" content="杨犇">
+      <meta itemprop="description" content="直到这一刻微笑着说话为止，我至少留下了一公升眼泪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阿犇">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          查询差绝对值的最小值
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-06-23 14:01:28 / 修改时间：14:26:06" itemprop="dateCreated datePublished" datetime="2021-06-23T14:01:28+08:00">2021-06-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98/" itemprop="url" rel="index"><span itemprop="name">算法题</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98/leetcode/" itemprop="url" rel="index"><span itemprop="name">leetcode</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%AE%97%E6%B3%95%E9%A2%98/leetcode/%E5%91%A8%E8%B5%9B/" itemprop="url" rel="index"><span itemprop="name">周赛</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>第246场周赛 D</p>
+<p>传送门：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/minimum-absolute-difference-queries/">https://leetcode-cn.com/problems/minimum-absolute-difference-queries/</a></p>
+<span id="more"></span>
+<h3 id="Problem"><a href="#Problem" class="headerlink" title="Problem"></a>Problem</h3><p>一个数组 <code>a</code> 的 <strong>差绝对值的最小值</strong> 定义为：<code>0 &lt;= i &lt; j &lt; a.length</code> 且 <code>a[i] != a[j]</code> 的 <code>|a[i] - a[j]|</code> 的 <strong>最小值</strong>。如果 <code>a</code> 中所有元素都 <strong>相同</strong> ，那么差绝对值的最小值为 <code>-1</code> 。</p>
+<ul>
+<li>比方说，数组 <code>[5,**2**,**3**,7,2]</code> 差绝对值的最小值是 <code>|2 - 3| = 1</code> 。注意答案不为 <code>0</code> ，因为 <code>a[i]</code> 和 <code>a[j]</code> 必须不相等。</li>
+</ul>
+<p>给你一个整数数组 <code>nums</code> 和查询数组 <code>queries</code> ，其中 <code>queries[i] = [li, ri]</code> 。对于每个查询 <code>i</code> ，计算 <strong>子数组</strong> <code>nums[li...ri]</code> 中 <strong>差绝对值的最小值</strong> ，子数组 <code>nums[li...ri]</code> 包含 <code>nums</code> 数组（下标从 <strong>0</strong> 开始）中下标在 <code>li</code> 和 <code>ri</code> 之间的所有元素（包含 <code>li</code> 和 <code>ri</code> 在内）。</p>
+<p>请你返回 <code>ans</code> <strong>数组</strong>，其中 <code>ans[i]</code> 是第 <code>i</code> 个查询的答案。</p>
+<p><strong>子数组</strong> 是一个数组中连续的一段元素。</p>
+<p><code>|x|</code> 的值定义为：</p>
+<ul>
+<li>如果 <code>x &gt;= 0</code> ，那么值为 <code>x</code> 。</li>
+<li>如果 <code>x &lt; 0</code> ，那么值为 <code>-x</code> 。</li>
+</ul>
+<p><strong>示例 1</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [1,3,4,8], queries = [[0,1],[1,2],[2,3],[0,3]]</span><br><span class="line">输出：[2,1,4,1]</span><br><span class="line">解释：查询结果如下：</span><br><span class="line">- queries[0] = [0,1]：子数组是 [1,3] ，差绝对值的最小值为 |1-3| = 2 。</span><br><span class="line">- queries[1] = [1,2]：子数组是 [3,4] ，差绝对值的最小值为 |3-4| = 1 。</span><br><span class="line">- queries[2] = [2,3]：子数组是 [4,8] ，差绝对值的最小值为 |4-8| = 4 。</span><br><span class="line">- queries[3] = [0,3]：子数组是 [1,3,4,8] ，差的绝对值的最小值为 |3-4| = 1 。</span><br></pre></td></tr></table></figure>
+<p><strong>示例 2</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">输入：nums = [4,5,2,2,7,10], queries = [[2,3],[0,2],[0,5],[3,5]]</span><br><span class="line">输出：[-1,1,1,3]</span><br><span class="line">解释：查询结果如下：</span><br><span class="line">- queries[0] = [2,3]：子数组是 [2,2] ，差绝对值的最小值为 -1 ，因为所有元素相等。</span><br><span class="line">- queries[1] = [0,2]：子数组是 [4,5,2] ，差绝对值的最小值为 |4-5| = 1 。</span><br><span class="line">- queries[2] = [0,5]：子数组是 [4,5,2,2,7,10] ，差绝对值的最小值为 |4-5| = 1 。</span><br><span class="line">- queries[3] = [3,5]：子数组是 [2,7,10] ，差绝对值的最小值为 |7-10| = 3 。</span><br></pre></td></tr></table></figure>
+<h5 id="数据范围"><a href="#数据范围" class="headerlink" title="数据范围"></a>数据范围</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2 &lt;= nums.length &lt;= 1e5</span><br><span class="line">1 &lt;= nums[i] &lt;= 100</span><br><span class="line">1 &lt;= queries.length &lt;= 2 * 1e4</span><br><span class="line">0 &lt;= li &lt; ri &lt; nums.length</span><br></pre></td></tr></table></figure>
+<h4 id="前缀和-哈希"><a href="#前缀和-哈希" class="headerlink" title="前缀和+哈希"></a>前缀和+哈希</h4><ul>
+<li><code>1 &lt;= nums[i] &lt;= 100</code></li>
+</ul>
+<p>数组中数据范围只有100，可以看作突破口。</p>
+<p>预处理前缀和，我们在判断某个数时，如果出现过记为1，没有出现过记为0。</p>
+<p>$q[i][j]$：数字$i$在前$j$位出现过多少次。</p>
+<p>预处理前缀和：<code>10^5*100=10^7​</code>。</p>
+<p>预处理前缀和，可以将判断<code>num[i]</code>中某个数是否出现过的时间复杂度优化为$O(1)$，对每次询问判断差值最大值只需要扫一次$1-100$，共<code>2*10^4*100=2*10^6</code>。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// q[i][j]:</span></span><br><span class="line">    <span class="keyword">int</span> q[<span class="number">102</span>][<span class="number">100002</span>];</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; ans;</span><br><span class="line">    <span class="function">vector&lt;<span class="keyword">int</span>&gt; <span class="title">minDifference</span><span class="params">(vector&lt;<span class="keyword">int</span>&gt;&amp; nums, vector&lt;vector&lt;<span class="keyword">int</span>&gt;&gt;&amp; queries)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 1 &lt;= nums[i] &lt;= 100</span></span><br><span class="line">        <span class="comment">// 暴力：对每次询问 2*1e4： 哈希表扫一次区间1e5，找max1e2，时间复杂度O(2*1e9)</span></span><br><span class="line">        <span class="comment">// 优化：对每次询问 2*1e4：判断1-100每个数是否出现（可以优化到O（100）），找1e2，时间复杂度O(2*1e6)</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 处理0-100每个数是否出现过</span></span><br><span class="line">        <span class="comment">// 对数组中的每个数x，nums[i]==x置为1，nums[i]!=x置为0；</span></span><br><span class="line">        <span class="comment">// 预处理用前缀和O(1e5*1e2)=O(1e7)</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=<span class="number">100</span>;i++)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;nums.<span class="built_in">size</span>();j++)&#123;</span><br><span class="line">                <span class="keyword">int</span> tnt=<span class="number">0</span>;</span><br><span class="line">                <span class="keyword">if</span>(nums[j]==i) tnt=<span class="number">1</span>;</span><br><span class="line">                q[i][j+<span class="number">1</span>]=q[i][j]+tnt;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 可以不用vector来存，然后再遍历求Min</span></span><br><span class="line">        <span class="comment">// 不需要额外开空间</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;queries.<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> last=<span class="number">-1</span>; <span class="comment">// 上一个出现过的数</span></span><br><span class="line">            <span class="keyword">int</span> Min=<span class="number">101</span>;</span><br><span class="line">            <span class="keyword">int</span> l=queries[i][<span class="number">0</span>];</span><br><span class="line">            <span class="keyword">int</span> r=queries[i][<span class="number">1</span>];</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">1</span>;j&lt;=<span class="number">100</span>;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(q[j][r+<span class="number">1</span>]-q[j][l]&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                    <span class="comment">// 更新Min</span></span><br><span class="line">                    <span class="keyword">if</span>(last!=<span class="number">-1</span>)&#123;</span><br><span class="line">                        Min=<span class="built_in">min</span>(Min,j-last);</span><br><span class="line">                    &#125;</span><br><span class="line">                    last=j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(Min==<span class="number">101</span>) Min=<span class="number">-1</span>;</span><br><span class="line">            ans.<span class="built_in">push_back</span>(Min);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+    </div>
+
+
+    
+    
+    
+        <div class="reward-container">
+  <div>您的支持是我继续创作的最大动力！</div>
+  <button onclick="var qr = document.getElementById('qr'); qr.style.display = (qr.style.display === 'none') ? 'block' : 'none';">
+    打赏
+  </button>
+  <div id="qr" style="display: none;">
+      
+      <div style="display: inline-block;">
+        <img src="/images/wechatpay.jpg" alt="杨犇 微信支付">
+        <p>微信支付</p>
+      </div>
+      
+      <div style="display: inline-block;">
+        <img src="/images/alipay.jpg" alt="杨犇 支付宝">
+        <p>支付宝</p>
+      </div>
+
+  </div>
+</div>
+
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>杨犇
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://benyang0506.github.io/2021/06/23/%E6%9F%A5%E8%AF%A2%E5%B7%AE%E7%BB%9D%E5%AF%B9%E5%80%BC%E7%9A%84%E6%9C%80%E5%B0%8F%E5%80%BC/" title="查询差绝对值的最小值">https://benyang0506.github.io/2021/06/23/查询差绝对值的最小值/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%93%88%E5%B8%8C%E8%A1%A8/" rel="tag"># 哈希表</a>
+              <a href="/tags/%E5%89%8D%E7%BC%80%E5%92%8C/" rel="tag"># 前缀和</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/06/23/%E7%BB%9F%E8%AE%A1%E5%AD%90%E5%B2%9B%E5%B1%BF/" rel="prev" title="统计子岛屿">
+      <i class="fa fa-chevron-left"></i> 统计子岛屿
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/06/25/%E5%8D%95%E8%AF%8D%E6%8E%A5%E9%BE%99/" rel="next" title="单词接龙">
+      单词接龙 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Problem"><span class="nav-number">1.</span> <span class="nav-text">Problem</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%8C%83%E5%9B%B4"><span class="nav-number">1.0.1.</span> <span class="nav-text">数据范围</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E7%BC%80%E5%92%8C-%E5%93%88%E5%B8%8C"><span class="nav-number">1.1.</span> <span class="nav-text">前缀和+哈希</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="杨犇"
+      src="/assets/img/head.jpg">
+  <p class="site-author-name" itemprop="name">杨犇</p>
+  <div class="site-description" itemprop="description">直到这一刻微笑着说话为止，我至少留下了一公升眼泪</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/benyang0506" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;benyang0506" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yb</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script color='' opacity='' zIndex='' count='' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+  <script defer src="/lib/three/three.min.js"></script>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/clicklove.js"></script>
+
+  
+</body>
+</html>
