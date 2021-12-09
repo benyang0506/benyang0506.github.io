@@ -202,7 +202,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-09 16:28:53" itemprop="dateModified" datetime="2021-12-09T16:28:53+08:00">2021-12-09</time>
+                <time title="修改时间：2021-12-09 16:36:49" itemprop="dateModified" datetime="2021-12-09T16:36:49+08:00">2021-12-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -229,25 +229,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="C4-5算法"><a href="#C4-5算法" class="headerlink" title="C4.5算法"></a>C4.5算法</h2><h4 id="C4-5算法简介"><a href="#C4-5算法简介" class="headerlink" title="C4.5算法简介"></a><strong>C4.5算法简介</strong></h4><p>C4.5算法是用于生成决策树的一种经典算法，是ID3算法的一种延伸和优化。C4.5算法对ID3算法主要做了一下几点改进：<br>  （1）通过信息增益率选择分裂属性，克服了ID3算法中通过信息增益倾向于选择拥有多个属性值的属性作为分裂属性的不足；<br>  （2）能够处理离散型和连续型的属性类型，即将连续型的属性进行离散化处理；<br>  （3）构造决策树之后进行剪枝操作；<br>  （4）能够处理具有缺失属性值的训练数据。</p>
-<h4 id="分裂属性的选择——信息增益率"><a href="#分裂属性的选择——信息增益率" class="headerlink" title="分裂属性的选择——信息增益率"></a><strong>分裂属性的选择——信息增益率</strong></h4><p>分裂属性选择的评判标准是决策树算法之间的根本区别。ID3算法由于采用的是信息增益，容易倾向于选择取值较多的属性作为节点。改良后的C4.5算法采用的是信息增益率，信息增益率=信息增益/属性熵，公式：</p>
-<script type="math/tex; mode=display">
-Gain\_ratio(D,a)=\frac{Gain(D,a)}{IV(a)}</script><p> <strong>信息增益的计算公式</strong>如下（ID3中<a target="_blank" rel="noopener" href="https://www.aben.fun/2021/12/04/ID3%E7%AE%97%E6%B3%95/）">https://www.aben.fun/2021/12/04/ID3%E7%AE%97%E6%B3%95/）</a></p>
-<script type="math/tex; mode=display">
-IG(S|T)=Entropy(S)-\sum_{value(T)}\frac{|S_v|}{S}Entropy(S_v)</script><p>其中$S$为全部样本集合，$value(T)$是属性$T$的所有取值的集合，$v$是$T$的其中一个属性值，$S_v$是$S$中属性$T$的值为$v$的样例集合，$|S_v|$为$S_v$中所含样例数。</p>
-<p>属性熵</p>
-<script type="math/tex; mode=display">
-IV(a)=-\sum_{i=1}^n{\frac{D^i}{D}log_2(\frac{D^i}{D})}</script><p>当属性有很多值时，虽然信息增益变大了，但是相应的属性熵也会变大。所以最终计算的信息增益率并不是很大。在一定程度上可以避免ID3倾向于选择取值较多的属性作为节点的问题。</p>
-<h4 id="连续型属性的离散化处理"><a href="#连续型属性的离散化处理" class="headerlink" title="连续型属性的离散化处理"></a><strong>连续型属性的离散化处理</strong></h4><p>当属性类型为离散型，无须对数据进行离散化处理；当属性类型为连续型，则需要对数据进行离散化处理。C4.5算法针对连续属性的离散化处理，核心思想：将属性A的N个属性值按照升序排列；通过二分法将属性A的所有属性值分成两部分（共有N-1种划分方法，二分的阈值为相邻两个属性值的中间值）；计算每种划分方法对应的信息增益，选取信息增益最大的划分方法的阈值作为属性A二分的阈值。</p>
-<h4 id="剪枝——PEP-Pessimistic-Error-Pruning-剪枝法"><a href="#剪枝——PEP-Pessimistic-Error-Pruning-剪枝法" class="headerlink" title="剪枝——PEP(Pessimistic Error Pruning)剪枝法"></a><strong>剪枝——PEP(Pessimistic Error Pruning)剪枝法</strong></h4><p>由于决策树的建立完全是依赖于训练样本，因此该决策树对训练样本能够产生完美的拟合效果。但这样的决策树对于测试样本来说过于庞大而复杂，可能产生较高的分类错误率。这种现象就称为过拟合。因此需要将复杂的决策树进行简化，即去掉一些节点解决过拟合问题，这个过程称为剪枝。</p>
-<p>剪枝方法分为预剪枝和后剪枝两大类。预剪枝是在构建决策树的过程中，提前终止决策树的生长，从而避免过多的节点产生。预剪枝方法虽然简单但实用性不强，因为很难精确的判断何时终止树的生长。后剪枝是在决策树构建完成之后，对那些置信度不达标的节点子树用叶子结点代替，该叶子结点的类标号用该节点子树中频率最高的类标记。后剪枝方法又分为两种，一类是把训练数据集分成树的生长集和剪枝集；另一类算法则是使用同一数据集进行决策树生长和剪枝。常见的后剪枝方法有CCP(Cost Complexity Pruning)、REP(Reduced Error Pruning)、PEP(Pessimistic Error Pruning)、MEP(Minimum Error Pruning)。</p>
-<p>C4.5算法采用PEP(Pessimistic Error Pruning)剪枝法。PEP剪枝法由Quinlan提出，是一种自上而下的剪枝法，根据剪枝前后的错误率来判定是否进行子树的修剪，因此不需要单独的剪枝数据集。</p>
-<h4 id="缺失属性值的处理"><a href="#缺失属性值的处理" class="headerlink" title="缺失属性值的处理"></a><strong>缺失属性值的处理</strong></h4><p>训练样本集中有可能会出现一些样本缺失了一些属性值，待分类样本中也会出现这样的情况。当遇到这样的样本集时该如何处理呢？含有缺失属性的样本集会一般会导致三个问题：<br>  （１）在构建决策树时，每一个分裂属性的选取是由训练样本集中所有属性的信息増益率来决定的。而在此阶段，如果训练样本集中有些样本缺少一部分属性，此时该如何计算该属性的信息増益率；<br>  （２）当已经选择某属性作为分裂属性时，样本集应该根据该属性的值来进行分支，但对于那些该属性的值为未知的样本，应该将它分支到哪一棵子树上；<br>  （３）在决策树已经构建完成后，如果待分类样本中有些属性值缺失，则该样本的分类过程如何进行。<br>  针对上述因缺失属性值引起的三个问题，C4.5算法有多种解决方案。<br>  面对问题一，在计算各属性的信息増益率时，若某些样本的属性值未知，那么可以这样处理：计算某属性的信息増益率时忽略掉缺失了此属性的样本；或者通过此属性的样本中出现频率最高的属性值，賦值给缺失了此属性的样本。<br>  面对问题二，假设属性Ａ已被选择作为决策树中的一个分支节点，在对样本集进行分支的时候，对于那些属性Ａ的值未知的样本，可以送样处理：不处理那些属性Ａ未知的样本，即简单的忽略它们；或者根据属性Ａ的其他样本的取值，来对未知样本进行赋值；或者为缺失属性Ａ的样本单独创建一个分支，不过这种方式得到的决策树模型结点数显然要増加，使模型更加复杂了。<br>  面对问题三，根据己经生成的决策树模型，对一个待分类的样本进行分类时，若此样本的属性Ａ的值未知，可以这样处理：待分类样本在到达属性Ａ的分支结点时即可结束分类过程，此样本所属类别为属性Ａ的子树中概率最大的类别；或者把待分类样本的属性Ａ赋予一个最常见的值，然后继续分类过程。<br><img src="/2021/12/08/C4-5%E7%AE%97%E6%B3%95/Snipaste_2021-12-09_16-21-05.png" alt></p>
-<h4 id="C4-5算法优缺点分析"><a href="#C4-5算法优缺点分析" class="headerlink" title="C4.5算法优缺点分析"></a><strong>C4.5算法优缺点分析</strong></h4><p>优点：<br>（1）通过信息增益率选择分裂属性，克服了ID3算法中通过信息增益倾向于选择拥有多个属性值的属性作为分裂属性的不足；<br>（2）能够处理离散型和连续型的属性类型，即将连续型的属性进行离散化处理；<br>（3）构造决策树之后进行剪枝操作；<br>（4）能够处理具有缺失属性值的训练数据。<br>缺点：<br>（1）算法的计算效率较低，特别是针对含有连续属性值的训练样本时表现的尤为突出。<br>（2）算法在选择分裂属性时没有考虑到条件属性间的相关性，只计算数据集中每一个条件属性与决策属性之间的期望信息，有可能影响到属性选择的正确性。优点：<br>（1）通过信息增益率选择分裂属性，克服了ID3算法中通过信息增益倾向于选择拥有多个属性值的属性作为分裂属性的不足；<br>（2）能够处理离散型和连续型的属性类型，即将连续型的属性进行离散化处理；<br>（3）构造决策树之后进行剪枝操作；<br>（4）能够处理具有缺失属性值的训练数据。<br>缺点：<br>（1）算法的计算效率较低，特别是针对含有连续属性值的训练样本时表现的尤为突出。<br>（2）算法在选择分裂属性时没有考虑到条件属性间的相关性，只计算数据集中每一个条件属性与决策属性之间的期望信息，有可能影响到属性选择的正确性。</p>
-<p>参考文章：</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/89902999">https://zhuanlan.zhihu.com/p/89902999</a></p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zhihua_oba/article/details/70632622">https://blog.csdn.net/zhihua_oba/article/details/70632622</a></p>
-
+          <h2 id="C4-5算法"><a href="#C4-5算法" class="headerlink" title="C4.5算法"></a>C4.5算法</h2><h4 id="C4-5算法简介"><a href="#C4-5算法简介" class="headerlink" title="C4.5算法简介"></a><strong>C4.5算法简介</strong></h4><p>C4.5算法是用于生成决策树的一种经典算法，是ID3算法的一种延伸和优化。C4.5算法对ID3算法主要做了一下几点改进：</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/08/C4-5%E7%AE%97%E6%B3%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -379,7 +369,7 @@ IV(a)=-\sum_{i=1}^n{\frac{D^i}{D}log_2(\frac{D^i}{D})}</script><p>当属性有�
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-12-09 16:28:15" itemprop="dateModified" datetime="2021-12-09T16:28:15+08:00">2021-12-09</time>
+                <time title="修改时间：2021-12-09 16:31:28" itemprop="dateModified" datetime="2021-12-09T16:31:28+08:00">2021-12-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -407,35 +397,14 @@ IV(a)=-\sum_{i=1}^n{\frac{D^i}{D}log_2(\frac{D^i}{D})}</script><p>当属性有�
 
       
           <h2 id="ID3算法"><a href="#ID3算法" class="headerlink" title="ID3算法"></a>ID3算法</h2><h4 id="决策树是如何工作的"><a href="#决策树是如何工作的" class="headerlink" title="决策树是如何工作的"></a>决策树是如何工作的</h4><p>一棵决策树包含一个根结点、若干个内部结点和若干个叶结点；叶结点对应于决策结果，其他每个结点则对应一个属性测试；每个结点包含的样本根据属性测试的结果被划分到子结点中；根结点包含样本全集，从根结点到每个叶结点的每个叶结点的路径对应一个判定测试序列。决策树学习的目的是为了产生一棵泛化能力强，也就是能够处理未见实例的决策树。</p>
-<h4 id="ID3算法介绍"><a href="#ID3算法介绍" class="headerlink" title="ID3算法介绍"></a>ID3算法介绍</h4><p><strong>ID3算法</strong>是决策树的一种，它是基于奥卡姆剃刀原理的，即用尽量用较少的东西做更多的事。ID3算法，即Iterative Dichotomiser 3，迭代二叉树3代，是Ross Quinlan发明的一种决策树算法，这个算法的基础就是上面提到的奥卡姆剃刀原理，越是小型的决策树越优于大的决策树，尽管如此，也不总是生成最小的树型结构，而是一个启发式算法。</p>
-<p>在信息论中，期望信息越小，那么信息增益就越大，从而纯度就越高。ID3算法的核心思想就是以信息增益来度量属性的选择，选择分裂后信息增益最大的属性进行分裂。该算法采用自顶向下的贪婪搜索遍历可能的决策空间。</p>
-<h4 id="信息熵与信息增益"><a href="#信息熵与信息增益" class="headerlink" title="信息熵与信息增益"></a><strong>信息熵与信息增益</strong></h4><p>在信息增益中，重要性的衡量标准就是看特征能够为分类系统带来多少信息，带来的信息越多，该特征越重要。在认识信息增益之前，先来看看<strong>信息熵</strong>的定义</p>
-<p><strong>熵</strong>这个概念最早起源于物理学，在物理学中是用来度量一个热力学系统的无序程度，而在信息学里面，熵是对不确定性的度量。在<strong>1948</strong>年，<strong>香农</strong>引入了<strong>信息熵</strong>，将其定义为离散随机事件出现的概率，一个系统越是有序，信息熵就越低，反之一个系统越是混乱，它的信息熵就越高。所以信息熵可以被认为是系统有序化程度的一个度量。</p>
-<p>假如一个随机变量$X$的取值为$X={x_1,x_2,…,x_n} $，每一种取到的概率分别为${p_1,p_2,…,p_n}$，那么$X$的熵定义为</p>
-<script type="math/tex; mode=display">
-H(X)=-\sum_{i=1}^n{p_ilog_2p_i}</script><p>意思是一个变量的变化情况可能越多，那么它携带的信息量就越大。</p>
-<p>对于<strong>分类系统</strong>来说，类别$C$是变量，它的取值是${C_1,C_2,…,C_n}$，而每一个类别出现的概率分别是</p>
-<script type="math/tex; mode=display">
-P(C_1),P(C_2),...,P(C_n)</script><p>而这里的$n$就是类别的总数，此时分类系统的熵就可以表示为</p>
-<script type="math/tex; mode=display">
-H(C)=-\sum_{i=1}^n{P(C_i)log_2P(C_i)}</script><p>以上就是信息熵的定义，接下来介绍<strong>信息增益</strong>。</p>
-<p>信息增益是针对一个一个特征而言的，就是看一个特征$t$，系统有它和没有它时的信息量各是多少，两者的差值就是这个特征给系统带来的信息量，即<strong>信息增益</strong>。在决策树分类问题中，信息增益就是决策树在进行属性选择划分前和划分后信息的差值。</p>
-<p>假设当前信息的熵为$Entropy(S)$，划分后的信息熵为$Entropy(S|T)$，代表在特征属性$T$的条件下样本的条件熵。那么最终得到特征属性$T$带来的信息增益为</p>
-<script type="math/tex; mode=display">
-IG(T)=Entropy(S)-Entropy(S|T)</script><p> <strong>信息增益的计算公式</strong>如下</p>
-<script type="math/tex; mode=display">
-IG(S|T)=Entropy(S)-\sum_{value(T)}\frac{|S_v|}{S}Entropy(S_v)</script><p>其中$S$为全部样本集合，$value(T)$是属性$T$的所有取值的集合，$v$是$T$的其中一个属性值，$S_v$是$S$中属性$T$的值为$v$的样例集合，$|S_v|$为$S_v$中所含样例数。</p>
-<p>在决策树的每一个非叶子结点划分之前，先计算每一个属性所带来的信息增益，选择最大信息增益的属性来划分，因为信息增益越大，区分样本的能力就越强，越具有代表性，很显然这是一种自顶向下的贪心策略。以上就是<strong>ID3算法</strong>的核心思想。</p>
-<h5 id="决策树停止的条件"><a href="#决策树停止的条件" class="headerlink" title="决策树停止的条件"></a>决策树停止的条件</h5><ol>
-<li>该群数据的每一个数据已经归类到每一类数据中，即数据已经不能继续再分</li>
-<li>该群数据已经找不到新的属性进行节点分割</li>
-<li>该群数据没有任何未处理的数据</li>
-</ol>
-<h4 id="ID3算法实现"><a href="#ID3算法实现" class="headerlink" title="ID3算法实现"></a>ID3算法实现</h4><p>阅读$sklearn$官方文档可知，$sklearn$的决策树仅仅是实现了$cart$树而已，<br>当信息计算方式为$Gini$，$Entropy$，就用来分类。注意，$sklearn$并没有实现$ID3$，但是$cart$中使用$entropy$的效果，等效于“二叉树的$ID3$”，因为$ID3$可以是“二叉决策树”，也可以是“多叉决策树”，所以$sklearn$使用决策树+$entropy$方式时，无法实现“基于$ID3$算法的多叉决策树”。</p>
-<p><a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/tree.html#tree-algorithms-id3-c4-5-c5-0-and-cart">https://scikit-learn.org/stable/modules/tree.html#tree-algorithms-id3-c4-5-c5-0-and-cart</a></p>
-<p>参考文章：</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/starfire86/p/5749328.html">https://www.cnblogs.com/starfire86/p/5749328.html</a></p>
-
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2021/12/04/ID3%E7%AE%97%E6%B3%95/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -896,10 +865,16 @@ IG(S|T)=Entropy(S)-\sum_{value(T)}\frac{|S_v|}{S}Entropy(S_v)</script><p>其中$
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-11-01 19:39:27 / 修改时间：21:43:37" itemprop="dateCreated datePublished" datetime="2021-11-01T19:39:27+08:00">2021-11-01</time>
+              <time title="创建时间：2021-11-01 19:39:27" itemprop="dateCreated datePublished" datetime="2021-11-01T19:39:27+08:00">2021-11-01</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-11-12 22:22:58" itemprop="dateModified" datetime="2021-11-12T22:22:58+08:00">2021-11-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -965,10 +940,16 @@ IG(S|T)=Entropy(S)-\sum_{value(T)}\frac{|S_v|}{S}Entropy(S_v)</script><p>其中$
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-10-28 19:10:32 / 修改时间：19:18:58" itemprop="dateCreated datePublished" datetime="2021-10-28T19:10:32+08:00">2021-10-28</time>
+              <time title="创建时间：2021-10-28 19:10:32" itemprop="dateCreated datePublished" datetime="2021-10-28T19:10:32+08:00">2021-10-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-10-30 12:02:26" itemprop="dateModified" datetime="2021-10-30T12:02:26+08:00">2021-10-30</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
